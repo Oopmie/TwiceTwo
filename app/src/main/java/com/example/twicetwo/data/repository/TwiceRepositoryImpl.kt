@@ -10,6 +10,12 @@ class TwiceRepositoryImpl(
     private val api: TwiceToApi
 ) : TwiceRepository {
 
+    override suspend fun getParticipants(activityId: String): List<ParticipantDto> {
+        return api.getParticipants().filter {
+            it.activityId == activityId
+        }
+    }
+
     override suspend fun getUsers() = api.getUsers()
 
     override suspend fun register(user: UserDto): UserDto {

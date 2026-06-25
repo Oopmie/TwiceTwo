@@ -1,5 +1,11 @@
 package com.example.twicetwo.presentation.activity
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -17,11 +23,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.twicetwo.data.local.SessionManager
 import com.example.twicetwo.data.model.ActivityDto
 import com.example.twicetwo.data.remote.RetrofitInstance
 import com.example.twicetwo.data.repository.TwiceRepositoryImpl
+import com.example.twicetwo.presentation.profile.rotateImageIfRequired
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,10 +46,17 @@ fun CreateActivityScreen(
         mutableStateOf<Uri?>(null)
     }
 
-    val launcher = rememberLauncherForActivityResult (
-        contract = ActivityResultContracts.GetContent()
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
+
         if (uri != null) {
+
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
             selectedImageUri = uri
         }
     }
@@ -107,21 +122,22 @@ fun CreateActivityScreen(
 
         if (selectedImageUri != null) {
 
-            val bitmap = MediaStore.Images.Media.getBitmap(
-                context.contentResolver,
-                selectedImageUri
-            )
-
-            Image(
-                bitmap = bitmap.asImageBitmap(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-            )
-
+            val bitmap = selectedImageUri?.let { uri ->
+                context.contentResolver.openInputStream(uri)?.use {
+                    BitmapFactory.decodeStream(it)
+                }
+            }
+            bitmap?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         } else {
 
             Surface(
@@ -136,7 +152,7 @@ fun CreateActivityScreen(
 
         Button(
             onClick = {
-                launcher.launch("image/*")
+                launcher.launch(arrayOf("image/*"))
             }
         ) {
             Text("Выбрать фото мероприятия")
@@ -237,7 +253,9 @@ fun CreateActivityScreen(
 
         Button(
             onClick = {
-
+                val imagePath = selectedImageUri?.let {
+                    saveImageToInternalStorage(context, it)
+                }
                 val newActivity = ActivityDto(
                     title = title,
                     description = description,
@@ -248,7 +266,7 @@ fun CreateActivityScreen(
                     location = location,
                     maxParticipants = maxParticipants.toIntOrNull() ?: 10,
                     ageRestriction = ageRestriction.toIntOrNull() ?: 18,
-                    imageUrl = selectedImageUri?.toString() ?: "",
+                    imageUrl = imagePath ?: "",
                     organizerName = SessionManager.currentUser?.username ?: "",
                     isPro = isPro
                 )
@@ -268,5 +286,47 @@ fun CreateActivityScreen(
         ) {
             Text("Создать")
         }
+    }
+}
+
+fun rotateImageIfRequired(
+    context: Context,
+    uri: Uri?
+): Bitmap? {
+
+    if (uri == null) return null
+
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return null
+        val bitmap = BitmapFactory.decodeStream(inputStream) ?: return null
+
+        val exifInputStream = context.contentResolver.openInputStream(uri) ?: return bitmap
+        val exif = ExifInterface(exifInputStream)
+
+        val orientation = exif.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )
+
+        val matrix = Matrix()
+
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+        }
+
+        Bitmap.createBitmap(
+            bitmap,
+            0,
+            0,
+            bitmap.width,
+            bitmap.height,
+            matrix,
+            true
+        )
+
+    } catch (e: Exception) {
+        null
     }
 }

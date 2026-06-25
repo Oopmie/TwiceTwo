@@ -29,7 +29,7 @@ fun EditProfileScreen(
 
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(Unit, SessionManager.currentUser) {
         viewModel.loadUser(context)
     }
 

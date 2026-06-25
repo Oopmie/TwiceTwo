@@ -45,6 +45,14 @@ fun ProfileScreen(
 
     val context = LocalContext.current
 
+    fun loadCorrectBitmap(context: Context, uriString: String?): Bitmap? {
+        if (uriString == null) return null
+
+        val uri = Uri.parse(uriString)
+
+        return rotateImageIfRequired(context, uri)
+    }
+
     LaunchedEffect(Unit) {
         viewModel.loadUser(context)
     }
@@ -87,17 +95,19 @@ fun ProfileScreen(
 
         if (selectedImageUri != null) {
 
-            val bitmap = rotateImageIfRequired(context, selectedImageUri)
+            user?.avatar?.let { path ->
+                val bitmap = loadCorrectBitmap(context, user?.avatar)
 
-            bitmap?.let {
-                Image(
-                    bitmap = it.asImageBitmap(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(140.dp)
-                        .clip(CircleShape)
-                )
+                bitmap?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(140.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
         } else {

@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import com.example.twicetwo.data.local.SessionManager
 import com.example.twicetwo.data.remote.RetrofitInstance
 import com.example.twicetwo.data.repository.TwiceRepositoryImpl
+import com.example.twicetwo.presentation.auth.AuthViewModel
 
 @Composable
 fun ActivityDetailsScreen(
@@ -24,6 +25,7 @@ fun ActivityDetailsScreen(
     val viewModel = remember {
         ActivityViewModel(repository)
     }
+    val usernames = viewModel.participantsUsernames.value
 
     val activity = viewModel.selectedActivity
     val participants = viewModel.participants
@@ -85,8 +87,8 @@ fun ActivityDetailsScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            LazyColumn {
-                items(participants) { participant ->
+            Column {
+                usernames.forEach { name ->
 
                     Card(
                         modifier = Modifier
@@ -97,7 +99,7 @@ fun ActivityDetailsScreen(
                             modifier = Modifier.padding(12.dp)
                         ) {
                             Text(
-                                text = "User ID: ${participant.userId}"
+                                text = name
                             )
                         }
                     }

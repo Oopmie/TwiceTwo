@@ -6,6 +6,8 @@ import com.example.twicetwo.data.model.UserDto
 
 interface TwiceRepository {
 
+    suspend fun getParticipants(activityId: String): List<ParticipantDto>
+
     suspend fun getUsers(): List<UserDto>
 
     suspend fun register(user: UserDto): UserDto

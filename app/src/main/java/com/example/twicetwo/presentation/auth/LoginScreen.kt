@@ -22,7 +22,7 @@ fun LoginScreen(navController: NavController) {
             .padding(20.dp), verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "TwiceTo",
+            text = "TwiceTwo",
             style = MaterialTheme.typography.headlineLarge
         )
         Spacer(modifier = Modifier.height(20.dp))
