@@ -1,0 +1,151 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "anna",
+      "email": "anna@mail.com",
+      "password": "123456",
+      "avatar": "",
+      "firstName": "Анна",
+      "age": 20,
+      "city": "Москва",
+      "gender": "Женский",
+      "phoneNumber": "+79999999999",
+      "hasSubscription": false,
+      "isActive": true
+    },
+    {
+      "id": "2",
+      "username": "max",
+      "email": "max@mail.com",
+      "password": "123456",
+      "avatar": "",
+      "firstName": "Максим",
+      "age": 22,
+      "city": "Санкт-Петербург",
+      "gender": "Мужской",
+      "phoneNumber": "+79999999998",
+      "hasSubscription": true,
+      "isActive": true
+    },
+    {
+      "age": 19,
+      "avatar": "content://com.android.providers.media.documents/document/image%3A1000048721",
+      "city": "Калининград",
+      "email": "oopmie@mail.ru",
+      "firstName": "Milana",
+      "gender": "женский",
+      "hasSubscription": true,
+      "id": "cs9xe2_rgK8",
+      "isActive": true,
+      "password": "123456",
+      "phoneNumber": "+79099999993",
+      "username": "oopmienew"
+    }
+  ],
+  "activities": [
+    {
+      "about": "",
+      "ageRestriction": 18,
+      "description": "Смотрим фильмы и обсуждаем",
+      "imageUrl": "/data/user/0/com.example.twicetwo/files/img_1782424167862.jpg",
+      "isPro": false,
+      "location": "Киноленд",
+      "maxParticipants": 10,
+      "organizerId": "1",
+      "organizerName": "anna",
+      "startDate": "30.06.2026",
+      "startTime": "18:00",
+      "title": "Вечер кино",
+      "id": "h7Zu8Lbn8CQ"
+    },
+    {
+      "about": "",
+      "ageRestriction": 18,
+      "description": "Прогулка и кофе",
+      "imageUrl": "/data/user/0/com.example.twicetwo/files/img_1782424561732.jpg",
+      "isPro": false,
+      "location": "ПКиО",
+      "maxParticipants": 8,
+      "organizerId": "1",
+      "organizerName": "anna",
+      "startDate": "03.07.2026",
+      "startTime": "16:00",
+      "title": "Прогулка в парке",
+      "id": "44Vh0LXf_Zs"
+    },
+    {
+      "about": "",
+      "ageRestriction": 18,
+      "description": "Играем в боулинг",
+      "imageUrl": "/data/user/0/com.example.twicetwo/files/img_1782424726880.jpg",
+      "isPro": true,
+      "location": "Эпицентр",
+      "maxParticipants": 6,
+      "organizerId": "2",
+      "organizerName": "max",
+      "startDate": "01.07.2026",
+      "startTime": "20:00",
+      "title": "Боулинг вечер",
+      "id": "gYz7yqZsZZ4"
+    },
+    {
+      "about": "",
+      "ageRestriction": 18,
+      "description": "Прогулка с собакой в парке",
+      "imageUrl": "/data/user/0/com.example.twicetwo/files/img_1782426146732.jpg",
+      "isPro": true,
+      "location": "Центральный парк",
+      "maxParticipants": 5,
+      "organizerId": "cs9xe2_rgK8",
+      "organizerName": "oopmienew",
+      "startDate": "27.06.2026",
+      "startTime": "15:00",
+      "title": "В парк с собакой",
+      "id": "I9UkhC3ifdI"
+    }
+  ],
+  "participants": [
+    {
+      "id": "1",
+      "activityId": "1",
+      "userId": "2",
+      "username": "Максим"
+    },
+    {
+      "activityId": "h7Zu8Lbn8CQ",
+      "userId": "cs9xe2_rgK8",
+      "username": "",
+      "id": "nNTKhrGbE3o"
+    },
+    {
+      "activityId": "I9UkhC3ifdI",
+      "userId": "cs9xe2_rgK8",
+      "username": "",
+      "id": "6MB2nl-ovA4"
+    }
+  ],
+  "interests": [
+    {
+      "id": "1",
+      "name": "Кино"
+    },
+    {
+      "id": "2",
+      "name": "Боулинг"
+    },
+    {
+      "id": "3",
+      "name": "Прогулки"
+    },
+    {
+      "id": "4",
+      "name": "Рестораны"
+    },
+    {
+      "id": "5",
+      "name": "Настольные игры"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
